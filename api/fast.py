@@ -13,5 +13,5 @@ app = FastAPI()
 
 @app.get("/")
 def index():
-    return {"greeting": "Hello world"}
+    return {"prediction": "The price of the share is ..."}
 
