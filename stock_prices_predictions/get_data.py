@@ -77,6 +77,7 @@ def get_lstm_data(stock):
     
     X_train = df_[df_.year<2015]
     X_test = df_[df_.year>2014]
+    #X_test = X_test[X_test.year<2016]
     X_train = X_train.iloc[:,3:4]
     X_test = X_test.iloc[:, 3:4]
 
@@ -120,15 +121,16 @@ def create_sequences_scaled_plus(dataf, data2, prediction_timeframe=1, sequence_
     y = []
     z =[]
 
-    for i in range(0, len(dataf)-100, 9):
+    for i in range(0, len(dataf)-100, 4):
         day = []
         df_ = dataf.iloc[i:i+sequence_lenght+prediction_timeframe,:]
         sequence_a.append(df_.iloc[:-prediction_timeframe,:])
-        y.append(np.array(df_.iloc[-1,0]))
+        y.append(df_.iloc[-1,0])
         
         df_2 = data2.iloc[i:i+sequence_lenght+prediction_timeframe,:]
         z.append(np.array(df_2.iloc[-2,0]))
 
     X = np.array(sequence_a).astype(np.float32)
-
+    #X = sequence_a
     return (np.array(X), np.array(y), np.array(z))
+    #return (X, y, z)
