@@ -15,3 +15,5 @@ setup(name='stock_prices_predictions',
       include_package_data=True,
       scripts=['scripts/stock_prices_predictions-run'],
       zip_safe=False)
+
+
