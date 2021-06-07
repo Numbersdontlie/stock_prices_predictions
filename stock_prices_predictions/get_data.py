@@ -103,9 +103,11 @@ def create_sequences(dataf, datanotscaled, prediction_timeframe):
 
 def create_sequences_scaled(dataf, prediction_timeframe=1, sequence_lenght=19):
     sequence_a = []
-    for i in range(0, len(dataf)):
+
+    for i in range(0, len(dataf)-sequence_lenght):
+
         sequence_a.append(dataf.iloc[i:i+sequence_lenght,:]) 
-    #X = np.array(sequence_a).astype(np.float32)
+
     return np.array(sequence_a)
 
 def create_sequences_scaled_plus(dataf, data2, prediction_timeframe=1, sequence_lenght=19):
