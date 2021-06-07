@@ -101,20 +101,12 @@ def create_sequences(dataf, datanotscaled, prediction_timeframe):
 
     return (np.array(X), np.array(y))
 
-def create_sequences_scaled(dataf, prediction_timeframe):
+def create_sequences_scaled(dataf, prediction_timeframe=1, sequence_lenght=19):
     sequence_a = []
-    y = []
-    for i in range(0, len(dataf)-100, 19):
-        day = []
-        df_ = dataf.iloc[i:i+36+prediction_timeframe,:]
-
-        for p in range(19):
-            day.append(df_.iloc[p,:])
-        sequence_a.append(day)
-        y.append(np.array(df_.iloc[18+prediction_timeframe,0]))
-
-    X = np.array(sequence_a).astype(np.float32)
-    return (np.array(X), np.array(y))
+    for i in range(0, len(dataf)):
+        sequence_a.append(dataf.iloc[i:i+sequence_lenght,:]) 
+    #X = np.array(sequence_a).astype(np.float32)
+    return np.array(sequence_a)
 
 def create_sequences_scaled_plus(dataf, data2, prediction_timeframe=1, sequence_lenght=19):
     sequence_a = []
@@ -133,4 +125,21 @@ def create_sequences_scaled_plus(dataf, data2, prediction_timeframe=1, sequence_
     X = np.array(sequence_a).astype(np.float32)
     #X = sequence_a
     return (np.array(X), np.array(y), np.array(z))
-    #return (X, y, z)
+    #return (X, y, z)#
+
+def get_portfolio_data():
+    '''returns X and y for the training of the LSTM'''
+    cwd = os.getcwd()
+    simp_path4 = 'raw_data/df.csv'
+    abs_path4 = os.path.abspath(os.path.join(cwd,'..',simp_path4))
+    df_500 = pd.read_csv(abs_path4)
+    df_500.date = pd.to_datetime(df_500.date)
+    df_500['year'] = pd.DatetimeIndex(df_500['date']).year
+    df_500['month'] = pd.DatetimeIndex(df_500['date']).month
+    df_500['day'] = pd.DatetimeIndex(df_500['date']).day
+    df_500 = df_500[df_500.year>2014]
+    df_500 = df_500[df_500.year<2016]
+    list_of_10_stocks = ['T', 'INTC', 'ADBE', 'JPM', 'PG', 'NVDA', 'AAPL', 'AMZN', 'UNH', 'MA']
+    df_ = df_500[df_500['ticker'].isin(list_of_10_stocks)]
+
+    return df_
