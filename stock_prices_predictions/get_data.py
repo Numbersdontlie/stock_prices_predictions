@@ -139,8 +139,8 @@ def get_portfolio_data():
     df_500['year'] = pd.DatetimeIndex(df_500['date']).year
     df_500['month'] = pd.DatetimeIndex(df_500['date']).month
     df_500['day'] = pd.DatetimeIndex(df_500['date']).day
-    df_500 = df_500[df_500.year>2014]
-    df_500 = df_500[df_500.year<2016]
+    df_500 = df_500[df_500.year>2013]
+    #df_500 = df_500[df_500.year<year+1]
     list_of_10_stocks = ['T', 'INTC', 'ADBE', 'JPM', 'PG', 'NVDA', 'AAPL', 'AMZN', 'UNH', 'MA']
     df_ = df_500[df_500['ticker'].isin(list_of_10_stocks)]
 
