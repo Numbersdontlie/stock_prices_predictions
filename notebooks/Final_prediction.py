@@ -32,7 +32,7 @@ prediction_date = "2015-04-15"
 ticker_user = "T"
 
 #Getting the data to predict 
-def data_predict(ticker_user):
+def data_predict(ticker_user, prediction_date):
     df_ticker = df[df["ticker"] == ticker_user]
     df_ticker.reset_index(inplace=True)
     ind = df_ticker.index[df_ticker["date"] == prediction_date].tolist()
@@ -41,10 +41,10 @@ def data_predict(ticker_user):
     return df_ticker
 
 #Making scaling and predictions 
-df_ticker = pd.DataFrame(data_predict(ticker_user)[:-1])
-X_test_T = dict_of_scaler[ticker_user].transform(df_ticker)
-prediction = dict_of_model[ticker_user].predict(X_test_T[np.newaxis,:,:])
-prediction_back = dict_of_scaler[ticker_user].inverse_transform(prediction.reshape(-1, 1))
-
-print(prediction_back)
+def make_prediction(ticker_user, prediction_date):
+    df_ticker = pd.DataFrame(data_predict(ticker_user, prediction_date)[:-1])
+    X_test_T = dict_of_scaler[ticker_user].transform(df_ticker)
+    prediction = dict_of_model[ticker_user].predict(X_test_T[np.newaxis,:,:])
+    prediction_back = dict_of_scaler[ticker_user].inverse_transform(prediction.reshape(-1, 1))
+    return prediction_back
 
