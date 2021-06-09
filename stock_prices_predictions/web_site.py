@@ -7,6 +7,12 @@ import matplotlib.pyplot as plt
 import datetime
 
 
+st.set_page_config(
+    page_title="Stock Price Prediction",
+    page_icon="🧙‍♂️",
+    layout="centered",
+    initial_sidebar_state="expanded")
+
 ### - - - - - - - - - - - - - - - - - - - - - - - - - ###
 ### - - - - - - - - - - - - SIDEBAR- - - - - - - - - -###
 ### - - - - - - - - - - - - - - - - - - - - - - - - - ###
@@ -42,17 +48,20 @@ if my_page == 'Stock Price Prediction':
             })
 
     df = get_select_box_data()
-
-    option = st.selectbox('Select a company to predict', df['first column'])
+    col3, col4 = st.beta_columns(2)
+    with col3:
+        option = st.selectbox('Select a company to predict', df['first column'])
     #option = st.multiselect('Select a line to filter', stocks, default=stocks[0])
     filtered_df = df[df['first column'] == option]
 
     #st.write(filtered_df)
 
     #user inputs date
-    d = st.date_input(
-        "What date you want to predict?",
-        datetime.date(2015, 4, 15))
+    col5, col6 = st.beta_columns(2)
+    with col5:
+        d = st.date_input(
+            "What date you want to predict?",
+            datetime.date(2015, 4, 15))
     #st.write('Your birthday is:', str(d)))
 
     if st.button('predict'):
@@ -74,6 +83,8 @@ if my_page == 'Stock Price Prediction':
         #plt.show()
         st.pyplot(fig)
 
+        with st.beta_expander("See explanation"):
+            st.write("""This site uses trained models to predict the next day. Each stock has a different model and a different error""")
 
 
 else:
@@ -84,13 +95,16 @@ else:
     st.markdown("""### compare how the AI Trader compares to buy and hold stocks""")
 
     # USER CHOOSES DATES
-    s = st.date_input(
-        "Pick the start date",
-        datetime.date(2015, 4, 15))
 
-    e = st.date_input(
-        "Pick the end date",
-        datetime.date(2015, 12, 30))
+    col1, col2 = st.beta_columns(2)
+    with col1:
+        s = st.date_input(
+            "Pick start date",
+            datetime.date(2015, 4, 15))
+    with col2:
+        e = st.date_input(
+            "Pick end date",
+            datetime.date(2015, 12, 30))
 
     # USER CHOOSES AMOUNT OF DOLLARS
     amount_invest = st.slider('Select how much to invest', 0, 100_000, 10_000, 10_000, key="choose amount to invest")
@@ -116,3 +130,7 @@ else:
 
         st.write(f'Buy and Hold strategy would have returned {int(hold_result)} USD or {int((hold_result-amount_invest)/amount_invest * 100)}%')
         st.write(f'AI Trader would have returned {int(ai_result)} USD or {int((ai_result-amount_invest)/amount_invest * 100)}%')
+
+        with st.beta_expander("See explanation"):
+            st.write("""AI Trader checks the next day prediction for each stock every day, if the stock is predicted to go higher, it 
+            buys the stock and if it is predicted to go lower, it sells the stock""")
