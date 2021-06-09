@@ -97,12 +97,10 @@ else:
 
     if st.button('predict'):
         # print is visible in server output, not in the page
-        hold_result, ai_result, hold, ai = ai_trade(str(s), str(e),amount_invest)
-        hold = pd.DataFrame(hold)
-        ai = pd.DataFrame(ai)
-        graph_ = pd.concat([hold, ai], axis=1)
-        #graph_.set_index('date', inplace=True)
-
+        hold_result, ai_result, hold, ai, df_ = ai_trade(str(s), str(e),amount_invest)
+        frame = { 'index': df_['date'][:-1], 'hold': hold, 'ai': ai }
+        graph_ = pd.DataFrame(frame)
+        graph_.set_index('index', inplace=True)
 
         # GRAPH THE PREDICTION AND PREVIOUS VALUES
 
@@ -110,15 +108,11 @@ else:
 
         #plt.figure(figsize=(10,3), dpi=100)
 
-        ax.plot(hold, label="buy and hold")
-        ax.plot(ai, label="AI Trader")
+        ax.plot(graph_.index, hold, label="buy and hold")
+        ax.plot(graph_.index, ai, label="AI Trader")
         ax.legend()
         #plt.show()
         st.pyplot(fig)
 
-        st.write(f'Buy and Hold strategy would have returned {int(hold_result)} or {int((hold_result-amount_invest)/amount_invest * 100)}%')
-        st.write(f'AI Trader would have returned {int(ai_result)} or {int((ai_result-amount_invest)/amount_invest * 100)}%')
-
-
-
-
+        st.write(f'Buy and Hold strategy would have returned {int(hold_result)} USD or {int((hold_result-amount_invest)/amount_invest * 100)}%')
+        st.write(f'AI Trader would have returned {int(ai_result)} USD or {int((ai_result-amount_invest)/amount_invest * 100)}%')
