@@ -18,14 +18,14 @@ list_of_10_stocks = ['T', 'INTC', 'ADBE', 'JPM', 'PG', 'NVDA', 'AAPL', 'AMZN', '
 
 # LOAD MODELS AND SCALERS
 
-cwd = os.getcwd()
-
+#cwd = os.getcwd()
+cwd = os.path.abspath(os.path.join(os.path.abspath(__file__),"../.."))
 dict_of_scaler = {}
 dict_of_model = {}
 
 for stock in list_of_10_stocks:
-    dict_of_scaler[stock] = joblib.load(os.path.abspath(os.path.join(cwd,'..',f'models_scalers/{stock}_scaler.joblib')))
-    dict_of_model[stock] = load_model(os.path.abspath(os.path.join(cwd,'..',f'models_scalers/{stock}_model.h5')))
+    dict_of_scaler[stock] = joblib.load(os.path.abspath(os.path.join(cwd,f'models_scalers/{stock}_scaler.joblib')))
+    dict_of_model[stock] = load_model(os.path.abspath(os.path.join(cwd,f'models_scalers/{stock}_model.h5')))
 
 # LOAD DATAFRAME
 

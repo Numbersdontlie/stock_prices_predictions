@@ -5,9 +5,11 @@ import numpy as np
 
 def get_lstm_training_data(stock, prediction_timeframe):
     '''returns X and y for the training of the LSTM'''
-    cwd = os.getcwd()
+    #cwd = os.getcwd()
+    cwd = os.path.abspath(os.path.join(os.path.abspath(__file__),"../.."))
     simp_path4 = 'raw_data/df.csv'
-    abs_path4 = os.path.abspath(os.path.join(cwd,'..',simp_path4))
+    #abs_path4 = os.path.abspath(os.path.join(cwd,'..',simp_path4))
+    abs_path4 = os.path.abspath(os.path.join(cwd,simp_path4))
     df_500 = pd.read_csv(abs_path4)
     df_500.date = pd.to_datetime(df_500.date)
     df_500['year'] = pd.DatetimeIndex(df_500['date']).year
@@ -131,9 +133,11 @@ def create_sequences_scaled_plus(dataf, data2, prediction_timeframe=1, sequence_
 
 def get_portfolio_data():
     '''returns X and y for the training of the LSTM'''
-    cwd = os.getcwd()
+    #cwd = os.getcwd()
+    cwd = os.path.abspath(os.path.join(os.path.abspath(__file__),"../.."))
     simp_path4 = 'raw_data/df.csv'
-    abs_path4 = os.path.abspath(os.path.join(cwd,'..',simp_path4))
+    #abs_path4 = os.path.abspath(os.path.join(cwd,'..',simp_path4))
+    abs_path4 = os.path.abspath(os.path.join(cwd,simp_path4))
     df_500 = pd.read_csv(abs_path4)
     df_500.date = pd.to_datetime(df_500.date)
     df_500['year'] = pd.DatetimeIndex(df_500['date']).year
