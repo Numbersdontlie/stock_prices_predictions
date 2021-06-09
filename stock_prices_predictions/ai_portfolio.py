@@ -167,4 +167,4 @@ def ai_trade(initial_date, final_date, initial_amount):
     #print(f"Buy and hold strategy made {buyandhold - initial_amount} ({(buyandhold - initial_amount)/initial_amount * 100}%)")
     #print(f"Our AI trader made {final_amount - initial_amount} ({(final_amount - initial_amount)/initial_amount * 100}%)")
 
-    return (buyandhold, final_amount, buyandholdgraph, aitradergraph)
+    return (buyandhold, final_amount, buyandholdgraph, aitradergraph, df_)
