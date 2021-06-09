@@ -5,6 +5,9 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import datetime
+#import mplcursors
+import altair as alt
+from datetime import timedelta  
 
 
 st.set_page_config(
@@ -68,26 +71,60 @@ if my_page == 'Stock Price Prediction':
         # print is visible in server output, not in the page
         data, date, real, prediction = make_prediction(filtered_df.iloc[0,1], str(d))
         graph_ = pd.concat([date, data], axis=1)
-        graph_.set_index('date', inplace=True)
-
+        #graph_.set_index('date', inplace=True)
+        
+        
+        
 
         # GRAPH THE PREDICTION AND PREVIOUS VALUES
 
         fig, ax = plt.subplots(figsize=(7, 3), dpi=100)
+        #--------------------------------
+        #--------------------------------
+        #----create the dataframes
+        last_date = max(graph_['date'])
+        prediction_data = {'date': [last_date + timedelta(days=1)], 'adj_close': [prediction]}
+        prediction_df = pd.DataFrame(data=prediction_data)
+        real['date'] = last_date + timedelta(days=1)
+        real['legend']='Real'
+        prediction_df['legend']='Predicted'
+        graph_['legend']='DataSeries'
+        
+         #--------------------------------
+        #--------------------------------
+        #----create the graphs
+        chart_line = alt.Chart(graph_).mark_line(point=True).encode(
+            x='date',
+            y='adj_close',
+            color=alt.Color('legend', legend=alt.Legend(title="Legend"))
+            ,tooltip='adj_close'  
+        )
 
-        #plt.figure(figsize=(10,3), dpi=100)
-        ax.plot(graph_.index, graph_['adj_close'], label="previous days")
-        ax.plot(graph_.index[-1], real, 'bo', label="real")  # plot x and y using blue circle markers
-        ax.plot(graph_.index[-1], prediction, 'ro', label="prediction")  # plot x and y using blue circle markers
-        ax.legend()
-        #plt.show()
-        st.pyplot(fig)
+        chart_real = alt.Chart(real).mark_point(filled=True, size=100.0).encode(
+            x='date',
+            y='adj_close',
+            color=alt.Color('legend', legend=alt.Legend(title="Legend")),
+        
+            tooltip='adj_close'
+        ).properties(title="Prediction")
+        
+        chart_forecast = alt.Chart(prediction_df).mark_point(filled=True, size=100.0).encode(
+            x='date',
+            y='adj_close',
+            tooltip='adj_close',
+            color=alt.Color('legend', legend=alt.Legend(title="Legend"))
+        )
+        charts = chart_forecast + chart_line + chart_real
+        charts = alt.layer(chart_line, chart_real, chart_forecast)
+        st.altair_chart(charts, use_container_width=True)
+        
 
         with st.beta_expander("See explanation"):
             st.write("""This site uses trained models to predict the next day. Each stock has a different model and a different error""")
 
 
 else:
+
     #PAGE TITLE
     st.markdown("""# AI Trader""")
     st.markdown("""## Please choose a date interval and amount of dollars to invest""")
@@ -130,7 +167,46 @@ else:
 
         st.write(f'Buy and Hold strategy would have returned {int(hold_result)} USD or {int((hold_result-amount_invest)/amount_invest * 100)}%')
         st.write(f'AI Trader would have returned {int(ai_result)} USD or {int((ai_result-amount_invest)/amount_invest * 100)}%')
+        
+         #--------------------------------
+        #--------------------------------
+        #----create the df
+        
+        prediction_data = e
+        prediction_df = pd.DataFrame(data=prediction_data)
+        #ai
+        real['date'] = last_date + timedelta(days=1)
+        real['legend']='Real'
+        prediction_df['legend']='Predicted'
+        graph_['legend']='DataSeries'
+        
+         #--------------------------------
+        #--------------------------------
+        #----create the graphs
+        chart_line = alt.Chart(graph_).mark_line(point=True).encode(
+            x='date',
+            y='adj_close',
+            color=alt.Color('legend', legend=alt.Legend(title="Legend"))
+            ,tooltip='adj_close'  
+        )
 
+        chart_real = alt.Chart(real).mark_point(filled=True, size=100.0).encode(
+            x='date',
+            y='adj_close',
+            color=alt.Color('legend', legend=alt.Legend(title="Legend")),
+        
+            tooltip='adj_close'
+        ).properties(title="Prediction")
+        
+        chart_forecast = alt.Chart(prediction_df).mark_point(filled=True, size=100.0).encode(
+            x='date',
+            y='adj_close',
+            tooltip='adj_close',
+            color=alt.Color('legend', legend=alt.Legend(title="Legend"))
+        )
+        charts = chart_forecast + chart_line + chart_real
+        charts = alt.layer(chart_line, chart_real, chart_forecast)
+        st.altair_chart(charts, use_container_width=True)
         with st.beta_expander("See explanation"):
             st.write("""AI Trader checks the next day prediction for each stock every day, if the stock is predicted to go higher, it 
             buys the stock and if it is predicted to go lower, it sells the stock""")
