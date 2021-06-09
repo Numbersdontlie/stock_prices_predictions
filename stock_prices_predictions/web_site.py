@@ -1,5 +1,6 @@
 import streamlit as st
 from stock_prices_predictions.one_day_prediction import *
+from stock_prices_predictions.ai_portfolio import *
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -76,9 +77,47 @@ if my_page == 'Stock Price Prediction':
 
 
 else:
-    st.title('AI Trader')
+    #PAGE TITLE
+    st.markdown("""# AI Trader""")
+    st.markdown("""## Please choose a date interval and amount of dollars to invest""")
+    st.markdown("""## Check out return of our AI Trader""")
+    st.markdown("""### compare how the AI Trader compares to buy and hold stocks""")
+
+    # USER CHOOSES DATES
+    s = st.date_input(
+        "Pick the start date",
+        datetime.date(2015, 4, 15))
+
+    e = st.date_input(
+        "Pick the end date",
+        datetime.date(2015, 12, 30))
+
+    # USER CHOOSES AMOUNT OF DOLLARS
+    amount_invest = st.slider('Select how much to invest', 0, 100_000, 10_000, 10_000, key="choose amount to invest")
+
+    if st.button('predict'):
+        # print is visible in server output, not in the page
+        hold_result, ai_result, hold, ai = ai_trade(str(s), str(e),amount_invest)
+        hold = pd.DataFrame(hold)
+        ai = pd.DataFrame(ai)
+        graph_ = pd.concat([hold, ai], axis=1)
+        #graph_.set_index('date', inplace=True)
 
 
+        # GRAPH THE PREDICTION AND PREVIOUS VALUES
+
+        fig, ax = plt.subplots(figsize=(7, 3), dpi=100)
+
+        #plt.figure(figsize=(10,3), dpi=100)
+
+        ax.plot(hold, label="buy and hold")
+        ax.plot(ai, label="AI Trader")
+        ax.legend()
+        #plt.show()
+        st.pyplot(fig)
+
+        st.write(f'Buy and Hold strategy would have returned {int(hold_result)} or {int((hold_result-amount_invest)/amount_invest * 100)}%')
+        st.write(f'AI Trader would have returned {int(ai_result)} or {int((ai_result-amount_invest)/amount_invest * 100)}%')
 
 
 
