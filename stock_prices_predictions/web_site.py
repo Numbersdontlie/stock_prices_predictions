@@ -73,12 +73,6 @@ if my_page == 'Stock Price Prediction':
         graph_ = pd.concat([date, data], axis=1)
         #graph_.set_index('date', inplace=True)
         
-        
-        
-
-        # GRAPH THE PREDICTION AND PREVIOUS VALUES
-
-        fig, ax = plt.subplots(figsize=(7, 3), dpi=100)
         #--------------------------------
         #--------------------------------
         #----create the dataframes
@@ -149,21 +143,24 @@ else:
     if st.button('predict'):
         # print is visible in server output, not in the page
         hold_result, ai_result, hold, ai, df_ = ai_trade(str(s), str(e),amount_invest)
-        frame = { 'index': df_['date'][:-1], 'hold': hold, 'ai': ai }
-        graph_ = pd.DataFrame(frame)
-        graph_.set_index('index', inplace=True)
+        frame_hold = pd.DataFrame({'date': df_['date'][:-1], 'price': hold})
+        frame_hold['strategy'] = 'Hold'
+        frame_ai = pd.DataFrame({'date': df_['date'][:-1], 'price': ai })
+        frame_ai['strategy'] = 'AI'
+        graph_ = pd.concat([frame_hold, frame_ai])
+        #graph_.set_index('index', inplace=True)
 
         # GRAPH THE PREDICTION AND PREVIOUS VALUES
 
-        fig, ax = plt.subplots(figsize=(7, 3), dpi=100)
+        #fig, ax = plt.subplots(figsize=(7, 3), dpi=100)
 
         #plt.figure(figsize=(10,3), dpi=100)
 
-        ax.plot(graph_.index, hold, label="buy and hold")
-        ax.plot(graph_.index, ai, label="AI Trader")
-        ax.legend()
+        #ax.plot(graph_.index, hold, label="buy and hold")
+        #ax.plot(graph_.index, ai, label="AI Trader")
+        #ax.legend()
         #plt.show()
-        st.pyplot(fig)
+        #st.pyplot(fig)
 
         st.write(f'Buy and Hold strategy would have returned {int(hold_result)} USD or {int((hold_result-amount_invest)/amount_invest * 100)}%')
         st.write(f'AI Trader would have returned {int(ai_result)} USD or {int((ai_result-amount_invest)/amount_invest * 100)}%')
@@ -172,41 +169,29 @@ else:
         #--------------------------------
         #----create the df
         
-        prediction_data = e
-        prediction_df = pd.DataFrame(data=prediction_data)
+        #prediction_df = pd.DataFrame(data=prediction_data)
+        st.write(graph_)
+        st.write(hold_result) #number
+        #list
         #ai
-        real['date'] = last_date + timedelta(days=1)
-        real['legend']='Real'
-        prediction_df['legend']='Predicted'
-        graph_['legend']='DataSeries'
+        #
+        #real['date'] = last_date + timedelta(days=1)
+        #real['legend']='Real'
+        # prediction_df['legend']='Predicted'
+        # graph_['legend']='DataSeries'
         
-         #--------------------------------
-        #--------------------------------
-        #----create the graphs
-        chart_line = alt.Chart(graph_).mark_line(point=True).encode(
+        #  #--------------------------------
+        # #--------------------------------
+        # #----create the graphs
+        
+        chart = alt.Chart(graph_).mark_line().encode(
             x='date',
-            y='adj_close',
-            color=alt.Color('legend', legend=alt.Legend(title="Legend"))
-            ,tooltip='adj_close'  
-        )
+            y='price',
+            color='strategy',
+            strokeDash='strategy'
+        ).properties(title="Strategies in Comparison")
 
-        chart_real = alt.Chart(real).mark_point(filled=True, size=100.0).encode(
-            x='date',
-            y='adj_close',
-            color=alt.Color('legend', legend=alt.Legend(title="Legend")),
-        
-            tooltip='adj_close'
-        ).properties(title="Prediction")
-        
-        chart_forecast = alt.Chart(prediction_df).mark_point(filled=True, size=100.0).encode(
-            x='date',
-            y='adj_close',
-            tooltip='adj_close',
-            color=alt.Color('legend', legend=alt.Legend(title="Legend"))
-        )
-        charts = chart_forecast + chart_line + chart_real
-        charts = alt.layer(chart_line, chart_real, chart_forecast)
-        st.altair_chart(charts, use_container_width=True)
+        st.altair_chart(chart, use_container_width=True)
         with st.beta_expander("See explanation"):
             st.write("""AI Trader checks the next day prediction for each stock every day, if the stock is predicted to go higher, it 
             buys the stock and if it is predicted to go lower, it sells the stock""")
