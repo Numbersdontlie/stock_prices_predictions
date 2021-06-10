@@ -19,7 +19,7 @@ list_of_10_stocks = ['T', 'INTC', 'ADBE', 'JPM', 'PG', 'NVDA', 'AAPL', 'AMZN', '
 # LOAD MODELS AND SCALERS
 
 #cwd = os.getcwd()
-if os.environ['DATA_DIRECTORY']:
+if "DATA_DIRECTORY" in os.environ:
     cwd = os.environ['DATA_DIRECTORY']
 else:
     cwd = os.path.abspath(os.path.join(os.path.abspath(__file__),"../.."))

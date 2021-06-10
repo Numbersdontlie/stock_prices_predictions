@@ -72,18 +72,20 @@ if my_page == 'Stock Price Prediction':
         data, date, real, prediction = make_prediction(filtered_df.iloc[0,1], str(d))
         graph_ = pd.concat([date, data], axis=1)
         #graph_.set_index('date', inplace=True)
-        
+        #print(graph_)
         #--------------------------------
         #--------------------------------
         #----create the dataframes
         last_date = max(graph_['date'])
-        prediction_data = {'date': [last_date + timedelta(days=1)], 'adj_close': [prediction]}
+        prediction_data = {'date': [last_date + timedelta(days=1)], 'adj_close': prediction[0]}
         prediction_df = pd.DataFrame(data=prediction_data)
         real['date'] = last_date + timedelta(days=1)
         real['legend']='Real'
         prediction_df['legend']='Predicted'
         graph_['legend']='DataSeries'
-        
+        #print(graph_)
+        #print(real)
+        #print(prediction_df)
          #--------------------------------
         #--------------------------------
         #----create the graphs

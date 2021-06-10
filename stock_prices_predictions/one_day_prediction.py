@@ -18,8 +18,9 @@ list_of_stocks = ['T', 'INTC', 'ADBE', 'JPM', 'PG', 'NVDA', 'AAPL', 'AMZN', 'UNH
 
 # LOAD MODELS AND SCALERS
 
-#cwd = os.getcwd()
-if os.environ['DATA_DIRECTORY']:
+#cwd = os.getcwd() if "FOO" in os.environ:
+
+if "DATA_DIRECTORY" in os.environ:
     cwd = os.environ['DATA_DIRECTORY']
 else:
     cwd = os.path.abspath(os.path.join(os.path.abspath(__file__),"../.."))
@@ -66,5 +67,9 @@ def make_prediction(ticker_user, prediction_date):
     prediction = dict_of_model[ticker_user].predict(X_test_T[np.newaxis,:,:])
     prediction_back = dict_of_scaler[ticker_user].inverse_transform(prediction.reshape(-1, 1))
     #print(type(real_value), type(df_ticker), type(prediction_back))
+    #print(df_ticker)
+    #print(date_series)
+    #print(real_value)
+    #print(prediction_back)
     return df_ticker, date_series, real_value, prediction_back
 
