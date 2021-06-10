@@ -19,7 +19,11 @@ list_of_10_stocks = ['T', 'INTC', 'ADBE', 'JPM', 'PG', 'NVDA', 'AAPL', 'AMZN', '
 # LOAD MODELS AND SCALERS
 
 #cwd = os.getcwd()
-cwd = os.path.abspath(os.path.join(os.path.abspath(__file__),"../.."))
+if os.environ['DATA_DIRECTORY']:
+    cwd = os.environ['DATA_DIRECTORY']
+else:
+    cwd = os.path.abspath(os.path.join(os.path.abspath(__file__),"../.."))
+
 dict_of_scaler = {}
 dict_of_model = {}
 
@@ -29,7 +33,7 @@ for stock in list_of_10_stocks:
 
 # LOAD DATAFRAME
 
-df = get_portfolio_data()
+#df = get_portfolio_data()
 
 # CREATE CLASS
 
@@ -61,6 +65,7 @@ def ai_trade(initial_date, final_date, initial_amount):
     #initial_amount = 10000
     in_hand = 0
 
+    df = get_portfolio_data()
     # INSTATIATE CLASSES
 
     list_stocks = {}

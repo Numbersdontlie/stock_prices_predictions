@@ -19,7 +19,11 @@ list_of_stocks = ['T', 'INTC', 'ADBE', 'JPM', 'PG', 'NVDA', 'AAPL', 'AMZN', 'UNH
 # LOAD MODELS AND SCALERS
 
 #cwd = os.getcwd()
-cwd = os.path.abspath(os.path.join(os.path.abspath(__file__),"../.."))
+if os.environ['DATA_DIRECTORY']:
+    cwd = os.environ['DATA_DIRECTORY']
+else:
+    cwd = os.path.abspath(os.path.join(os.path.abspath(__file__),"../.."))
+
 print(os.path.abspath(os.path.join(os.path.abspath(__file__),"../..")))
 dict_of_scaler = {}
 dict_of_model = {}
@@ -30,7 +34,7 @@ for stock in list_of_stocks:
 
 
 #Loading the DataFrame
-df = get_portfolio_data()
+#df = get_portfolio_data()
 
 #User Input
 #prediction_date = "2015-04-15"
@@ -38,6 +42,7 @@ df = get_portfolio_data()
 
 #Getting the data to predict 
 def data_predict(ticker_user, prediction_date):
+    print("enter data predict")
     #Loading the DataFrame
     df = get_portfolio_data()
 
@@ -51,7 +56,7 @@ def data_predict(ticker_user, prediction_date):
 
 #Making scaling and predictions 
 def make_prediction(ticker_user, prediction_date):
-    
+    print("enter make prediction")
     df_ticker, date_series = data_predict(ticker_user, prediction_date)
     df_ticker = pd.DataFrame(df_ticker)
     #df_ticker = pd.DataFrame(data_predict(ticker_user, prediction_date))
@@ -60,5 +65,6 @@ def make_prediction(ticker_user, prediction_date):
     X_test_T = dict_of_scaler[ticker_user].transform(df_ticker)
     prediction = dict_of_model[ticker_user].predict(X_test_T[np.newaxis,:,:])
     prediction_back = dict_of_scaler[ticker_user].inverse_transform(prediction.reshape(-1, 1))
-    return df_ticker, date_series, real_value, prediction_back[0][0]
+    #print(type(real_value), type(df_ticker), type(prediction_back))
+    return df_ticker, date_series, real_value, prediction_back
 
