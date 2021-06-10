@@ -1,3 +1,4 @@
+from altair.vegalite.v4.schema.core import Scale
 import streamlit as st
 from stock_prices_predictions.one_day_prediction import *
 from stock_prices_predictions.ai_portfolio import *
@@ -83,13 +84,19 @@ if my_page == 'Stock Price Prediction':
         real['legend']='Real'
         prediction_df['legend']='Predicted'
         graph_['legend']='DataSeries'
+        min_value = min(graph_['adj_close'])
+        if max(graph_['adj_close'])>= max(prediction_df['adj_close']):
+            max_val = max(graph_['adj_close'])
+        else:
+            max_val = max(prediction_df['adj_close'])
         
+        value_range = [min_value, max_val]
          #--------------------------------
         #--------------------------------
         #----create the graphs
         chart_line = alt.Chart(graph_).mark_line(point=True).encode(
             x='date',
-            y='adj_close',
+            y=alt.Y('adj_close',scale=Scale(domain=value_range, clamp=True)),
             color=alt.Color('legend', legend=alt.Legend(title="Legend"))
             ,tooltip='adj_close'  
         )
@@ -166,32 +173,22 @@ else:
         st.write(f'AI Trader would have returned {int(ai_result)} USD or {int((ai_result-amount_invest)/amount_invest * 100)}%')
         
          #--------------------------------
-        #--------------------------------
-        #----create the df
-        
-        #prediction_df = pd.DataFrame(data=prediction_data)
-        st.write(graph_)
-        st.write(hold_result) #number
-        #list
-        #ai
-        #
-        #real['date'] = last_date + timedelta(days=1)
-        #real['legend']='Real'
-        # prediction_df['legend']='Predicted'
-        # graph_['legend']='DataSeries'
-        
         #  #--------------------------------
         # #--------------------------------
         # #----create the graphs
         
-        chart = alt.Chart(graph_).mark_line().encode(
+        min_hold = min(frame_hold['price'])
+        max_ai = max(frame_ai['price'])
+        y_range = [min_hold, max_ai]
+        chart = alt.Chart(graph_).mark_line(size=5).encode(
             x='date',
-            y='price',
+            y= alt.Y('price',scale=Scale(domain=y_range, clamp=True)),
             color='strategy',
             strokeDash='strategy'
         ).properties(title="Strategies in Comparison")
-
+            
         st.altair_chart(chart, use_container_width=True)
+        
         with st.beta_expander("See explanation"):
             st.write("""AI Trader checks the next day prediction for each stock every day, if the stock is predicted to go higher, it 
             buys the stock and if it is predicted to go lower, it sells the stock""")
