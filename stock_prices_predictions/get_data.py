@@ -136,7 +136,7 @@ def get_portfolio_data():
     '''returns X and y for the training of the LSTM'''
     #cwd = os.getcwd()
     #cwd = os.path.abspath(os.path.join(os.path.abspath(__file__),"../.."))
-    if os.environ['DATA_DIRECTORY']:
+    if "DATA_DIRECTORY" in os.environ:
         cwd = os.environ['DATA_DIRECTORY']
     else:
         cwd = os.path.abspath(os.path.join(os.path.abspath(__file__),"../.."))

@@ -31,7 +31,7 @@ CMD streamlit run stock_prices_predictions/web_site.py --server.port $PORT
 
 ##Storage image on Container Registry parameters
 #GCP_PROJECT_ID = "stock-price-prediction-606"
-#DOCKER_IMAGE_NAME = "my-api-stock-in-kebab-case"
+#DOCKER_IMAGE_NAME = "stocks"
 #GCR_MULTI_REGION = eu.gcr.io
 #GCR_REGION = "europe-west1"
 
