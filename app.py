@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import datetime
 import requests
-import plotly.express as px
+#import plotly.express as px
 import altair as alt
 from stock_prices_predictions.one_day_prediction import *
 

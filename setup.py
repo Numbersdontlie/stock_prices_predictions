@@ -13,7 +13,7 @@ setup(name='stock_prices_predictions',
       test_suite='tests',
       # include_package_data: to install data from MANIFEST.in
       include_package_data=True,
-      scripts=['scripts/stock_prices_predictions-run'],
+      #scripts=['scripts/stock_prices_predictions-run'],
       zip_safe=False)
 
 

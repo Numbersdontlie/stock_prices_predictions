@@ -132,9 +132,14 @@ def create_sequences_scaled_plus(dataf, data2, prediction_timeframe=1, sequence_
     #return (X, y, z)#
 
 def get_portfolio_data():
+    print("enter get portfolio data")
     '''returns X and y for the training of the LSTM'''
     #cwd = os.getcwd()
-    cwd = os.path.abspath(os.path.join(os.path.abspath(__file__),"../.."))
+    #cwd = os.path.abspath(os.path.join(os.path.abspath(__file__),"../.."))
+    if os.environ['DATA_DIRECTORY']:
+        cwd = os.environ['DATA_DIRECTORY']
+    else:
+        cwd = os.path.abspath(os.path.join(os.path.abspath(__file__),"../.."))
     simp_path4 = 'raw_data/df.csv'
     #abs_path4 = os.path.abspath(os.path.join(cwd,'..',simp_path4))
     abs_path4 = os.path.abspath(os.path.join(cwd,simp_path4))
